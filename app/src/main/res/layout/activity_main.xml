@@ -6,56 +6,10 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:max="100"
-        android:visibility="gone" />
-
-    <EditText
-        android:id="@+id/addressInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="输入网址或搜索内容"
-        android:imeOptions="actionGo"
-        android:inputType="textUri"
-        android:padding="12dp"
-        android:singleLine="true" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp">
-
-        <Button
-            android:id="@+id/btnBack"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="后退" />
-
-        <Button
-            android:id="@+id/btnForward"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="前进" />
-
-        <Button
-            android:id="@+id/btnRefresh"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="刷新" />
-
-        <Button
-            android:id="@+id/btnOpen"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="打开" />
-    </LinearLayout>
+        android:max="100" />
 
     <WebView
         android:id="@+id/webView"
