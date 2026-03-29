@@ -36,8 +36,8 @@ class MainActivity : AppCompatActivity() {
         setupBackHandler()
         
         if (savedInstanceState == null) {
-            webView.loadUrl("https://openclaw.ai")
-            etUrl.setText("https://openclaw.ai")
+            webView.loadUrl("https://n.886423.xyz/")
+            etUrl.setText("https://n.886423.xyz/")
         }
     }
     
