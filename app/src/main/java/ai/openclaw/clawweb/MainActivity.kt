@@ -6,9 +6,9 @@ import android.view.WindowManager
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnRefresh: ImageButton
     private lateinit var btnGo: ImageButton
     private lateinit var btnFullscreen: ImageButton
+    private lateinit var toolbar: LinearLayout
     
     private var isFullscreen = false
     
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         btnRefresh = findViewById(R.id.btnRefresh)
         btnGo = findViewById(R.id.btnGo)
         btnFullscreen = findViewById(R.id.btnFullscreen)
+        toolbar = findViewById(R.id.toolbar)
     }
     
     private fun setupWebView() {
@@ -126,6 +128,7 @@ class MainActivity : AppCompatActivity() {
     private fun toggleFullscreen() {
         isFullscreen = !isFullscreen
         if (isFullscreen) {
+            // 全屏模式 - 隐藏系统UI和工具栏
             window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -134,9 +137,13 @@ class MainActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             )
+            toolbar.visibility = View.GONE
+            progressBar.visibility = View.GONE
             supportActionBar?.hide()
         } else {
+            // 退出全屏
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            toolbar.visibility = View.VISIBLE
             supportActionBar?.show()
         }
     }
