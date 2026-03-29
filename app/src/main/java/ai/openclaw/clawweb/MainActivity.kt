@@ -158,11 +158,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupBackHandler() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (!isToolbarVisible) {
-                    // 如果工具栏隐藏，先显示工具栏
-                    toggleToolbar()
-                } else if (webView.canGoBack()) {
-                    // 后退
+                if (webView.canGoBack()) {
+                    // 后退网页
                     webView.goBack()
                 } else {
                     // 退出应用
