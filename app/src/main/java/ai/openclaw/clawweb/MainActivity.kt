@@ -2,7 +2,6 @@ package ai.openclaw.clawweb
 
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -22,10 +21,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnForward: ImageButton
     private lateinit var btnRefresh: ImageButton
     private lateinit var btnGo: ImageButton
-    private lateinit var btnFullscreen: ImageButton
+    private lateinit var btnToggleToolbar: ImageButton
     private lateinit var toolbar: LinearLayout
     
-    private var isFullscreen = false
+    private var isToolbarVisible = true
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         btnForward = findViewById(R.id.btnForward)
         btnRefresh = findViewById(R.id.btnRefresh)
         btnGo = findViewById(R.id.btnGo)
-        btnFullscreen = findViewById(R.id.btnFullscreen)
+        btnToggleToolbar = findViewById(R.id.btnToggleToolbar)
         toolbar = findViewById(R.id.toolbar)
     }
     
@@ -110,8 +109,9 @@ class MainActivity : AppCompatActivity() {
             true
         }
         
-        btnFullscreen.setOnClickListener {
-            toggleFullscreen()
+        // 悬浮按钮点击切换工具栏显示/隐藏
+        btnToggleToolbar.setOnClickListener {
+            toggleToolbar()
         }
     }
     
@@ -125,26 +125,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
     
-    private fun toggleFullscreen() {
-        isFullscreen = !isFullscreen
-        if (isFullscreen) {
-            // 全屏模式 - 隐藏系统UI和工具栏
-            window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            )
+    private fun toggleToolbar() {
+        isToolbarVisible = !isToolbarVisible
+        if (isToolbarVisible) {
+            toolbar.visibility = View.VISIBLE
+            progressBar.visibility = if (progressBar.progress in 1..99) View.VISIBLE else View.GONE
+        } else {
             toolbar.visibility = View.GONE
             progressBar.visibility = View.GONE
-            supportActionBar?.hide()
-        } else {
-            // 退出全屏
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            toolbar.visibility = View.VISIBLE
-            supportActionBar?.show()
         }
     }
     
@@ -156,10 +144,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupBackHandler() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (isFullscreen) {
-                    // 退出全屏
-                    toggleFullscreen()
-                } else if (webView.canGoBack()) {
+                if (webView.canGoBack()) {
                     // 后退
                     webView.goBack()
                 } else {
