@@ -2,6 +2,7 @@ package ai.openclaw.clawweb
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -128,11 +129,24 @@ class MainActivity : AppCompatActivity() {
     private fun toggleToolbar() {
         isToolbarVisible = !isToolbarVisible
         if (isToolbarVisible) {
+            // 显示工具栏，退出全屏
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             toolbar.visibility = View.VISIBLE
             progressBar.visibility = if (progressBar.progress in 1..99) View.VISIBLE else View.GONE
+            supportActionBar?.show()
         } else {
+            // 隐藏工具栏，进入全屏
+            window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            )
             toolbar.visibility = View.GONE
             progressBar.visibility = View.GONE
+            supportActionBar?.hide()
         }
     }
     
@@ -144,7 +158,10 @@ class MainActivity : AppCompatActivity() {
     private fun setupBackHandler() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (webView.canGoBack()) {
+                if (!isToolbarVisible) {
+                    // 如果工具栏隐藏，先显示工具栏
+                    toggleToolbar()
+                } else if (webView.canGoBack()) {
                     // 后退
                     webView.goBack()
                 } else {
@@ -154,6 +171,21 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+    
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus && !isToolbarVisible) {
+            // 恢复全屏模式
+            window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            )
+        }
     }
     
     override fun onSaveInstanceState(outState: Bundle) {
